@@ -1,0 +1,29 @@
+# docker run --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs
+
+version: "3"
+
+services:
+
+  gogs:
+    image: gogs/gogs
+    ports:
+      - "10022:22"
+      - "10080:3000"
+    expose:
+      - 3000
+    restart: always
+    environment:
+      VIRTUAL_HOST: gogs.local
+      # if multiple ports, fill this env param
+      VIRTUAL_PORT: 3000
+    container_name: gogs
+    volumes:
+    - gogs:/data
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
+
+volumes:
+  gogs:

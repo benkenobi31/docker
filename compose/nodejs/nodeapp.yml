@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+
+  nodewebapp:
+    image: bvi/node-web-app:latest
+    expose:
+      - 8080
+    restart: always
+    environment:
+      VIRTUAL_HOST: nodewebapp.local
+    container_name: nodewebapp
+
+networks:
+  default:
+    external:
+      name: nginx-proxy

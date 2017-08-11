@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+
+  db_site1:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpwd
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    container_name: db_site1
+    volumes:
+      - db_site1:/var/lib/mysql
+
+  wordpress_site1:
+    depends_on:
+      - db_site1
+    image: wordpress:latest
+    expose:
+      - 80
+    restart: always
+    environment:
+      VIRTUAL_HOST: site1.local
+      WORDPRESS_DB_HOST: db_site1:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    container_name: wp_site1
+    volumes:
+      - html_site1:/var/www/html
+
+  adminer_site1:
+    depends_on:
+      - db_site1
+    image: adminer
+    expose:
+      - 8080
+    restart: always
+    environment:
+      VIRTUAL_HOST: site1.adminer.local
+      MYSQL_ROOT_PASSWORD: rootpwd
+    container_name: adner_site1
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
+
+volumes:
+  html_site1:
+  db_site1:
